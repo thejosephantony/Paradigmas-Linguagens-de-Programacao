@@ -1,0 +1,33 @@
+let fun conta saldo =
+	receive
+		{"debitar", valor} -> conta(saldo - valor); 
+		{"creditar", valor} -> conta(saldo + valor);
+		{"transferir", valor, contaDestino} ->
+			contaDestino ! {"creditar", valor}, 
+			conta(saldo - valor);
+		{"consultar", pid} ->
+			pid ! {self(), saldo}, 
+			conta(saldo);
+		"encerrar" -> true
+	end
+    , fun consultar conta =
+				conta ! {"consultar", self()},
+				conta ! "encerrar",
+				receive
+					x -> x
+				end
+in 
+	let fun banco saldo = let
+			var c1 = spawn(conta,[saldo]), 
+			var c2 = spawn(conta,[saldo]),
+			var c3 = spawn(conta,[saldo]),
+			var c4 = spawn(conta,[saldo]),
+			var c5 = spawn(conta,[saldo])
+		in c1 ! {"creditar",10}, 
+			c2 ! {"creditar", 50}, 
+			c2 ! {"transferir", 20, c3},
+			c3 ! {"transferir", 5, c4}, 
+			c5 ! {"creditar", 10}, 
+			c5 ! {"debitar", 9},
+			{consultar(c1),consultar(c2),consultar(c3),consultar(c4),consultar(c5)} 
+in banco(0)

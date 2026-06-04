@@ -1,0 +1,5 @@
+let var pid = spawn(fn pid . receive {x,y} -> pid ! (x + y) end, [self()]) in 
+		pid ! {2,3},
+		receive
+			x -> x
+		end

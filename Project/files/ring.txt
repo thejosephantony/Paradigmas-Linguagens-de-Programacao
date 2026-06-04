@@ -1,0 +1,16 @@
+let fun proB pidC text =
+	receive
+		{pidA, msg} -> pidC ! {pidA, msg ++ text} 
+	end,
+	fun proC text = 
+		receive
+			{pidA, msg} -> pidA ! (msg ++ text) 
+		end
+in 
+	let fun main textA textB textC =
+		let var pidC = spawn(proC,[textC]) in
+			let var pidB = spawn(proB,[pidC,textB]) in pidB ! {self(), textA},
+			receive 
+				msg -> msg 
+			end
+	in main("Hello from A. ", "Hello from B. ", "Hello from C.")

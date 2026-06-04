@@ -1,0 +1,21 @@
+let 
+	fun somaN x = 
+		receive 
+			{pid, y} -> pid ! (x + y)
+		end,
+	fun recebe n cont =
+		if n == 0 then cont
+		else
+			receive
+				x -> recebe(n - 1, cont + x)
+			end
+in
+	let 
+		var pid = spawn(somaN, [0]), 
+		var pid2 = spawn(somaN,[1]), 
+		var pid3 = spawn(somaN, [2]), 
+		var pid4 = spawn(somaN,[3]), 
+		var pid5 = spawn(somaN, [4]) 
+	in
+		pid ! pid2 ! pid3 ! pid4 ! pid5 ! {self(),1},
+		recebe(5, 0)

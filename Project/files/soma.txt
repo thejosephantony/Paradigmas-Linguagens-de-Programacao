@@ -1,0 +1,10 @@
+let fun soma pid x = 
+	receive
+		y -> pid ! (x + y) 
+	end
+in
+	let var pid = spawn(soma, [self(),1]) in 
+		pid ! 2,
+		receive
+			x -> x
+		end

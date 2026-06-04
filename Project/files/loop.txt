@@ -1,0 +1,14 @@
+let fun loop words = 
+	receive
+		{from, msg} ->
+			from ! {self(), msg ++ words}, loop(words);
+			false -> false 
+	end
+in let var pid = spawn(loop, [" world!"]) in 
+	let fun go words =
+		pid ! {self(), words}, 
+		receive
+			{pid2, msg} ->
+				pid2 ! false, msg
+		end
+	in go("Hello")
