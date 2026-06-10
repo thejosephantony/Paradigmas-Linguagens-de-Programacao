@@ -4,8 +4,7 @@ import li1.plp.expressions1.util.Tipo;
 import li1.plp.expressions2.memory.AmbienteCompilacao;
 import li1.plp.expressions2.memory.AmbienteExecucao;
 import li1.plp.expressions2.memory.VariavelNaoDeclaradaException;
-import li1.plp.functional2.expression.ValorIrredutivel;
-
+// import li1.plp.functional2.expression.ValorIrredutivel;
 public class Id implements Expressao {
 
 	private String idName;
@@ -93,9 +92,9 @@ public class Id implements Expressao {
 		try {
 			Valor valor = ambiente.get(this);
 			
-			if (valor instanceof ValorIrredutivel) {
-				return this;
-			}
+			// if (valor instanceof ValorIrredutivel) {
+			// 	return this;
+			// }
 						
 			return valor.clone();
 			
